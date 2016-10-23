@@ -8,16 +8,15 @@ http://www.futuretech.blinkenlights.nl/c-ray.html
 
 ## Usage
 ```
-Usage:
-      compile:  just type 'make'. 
-  ...with SDL:  'USESDL=1 make'
-          run:  ./c-ray-mt
-	   options:   -t <num>   how many threads to use (default: 1)
-                 -s WxH     where W is the width and H the height of the image
-                 -r <rays>  shoot <rays> rays per pixel (antialiasing)
-                 -i <file>  read from <file> instead of stdin
-                 -o <file>  write to <file> instead of stdout
-                 -h         help
+    compile:  just type 'make'. 
+...with SDL:  'USESDL=1 make'
+        run:  ./c-ray-mt
+    options:   -t <num>   how many threads to use (default: 1)
+               -s WxH     where W is the width and H the height of the image
+               -r <rays>  shoot <rays> rays per pixel (antialiasing)
+               -i <file>  read from <file> instead of stdin
+               -o <file>  write to <file> instead of stdout
+               -h         help
 ```
 Alternatively, the following syntax for scene input and image
 output are equivalent:
@@ -44,7 +43,7 @@ Command                                               | Execution Time (ms)
 ./c-ray-mt -t 1  -s 800x600 -r 1  -o foo.ppm -i scene | 5069
 ./c-ray-mt -t 16 -s 800x600 -r 16 -o foo.ppm -i scene | 4988 
 
-## Major Modifications from Original C-Ray 1.1:
+## Major Modifications from Original C-Ray 1.1
 As Epiphany-III is a coprocessor some modifications had to be made:
 * [Single Precision](#single_precision)
 * [Host Code for Epiphany Offload](#host_code)
@@ -89,12 +88,12 @@ separate thread is created for the display loop.  In order to enable SDL, you
 must have a clean build and define the USESDL value.
 ```
 make distclean
-USDSDL=1 make
+USESDL=1 make
 # An example of a long-running visualization:
 ./c-ray-mt -t 16 -r 128 -o foo.ppm -i scene
 ```
 
-### Known Issues
+## Known Issues
 Likely due to the conversion to 32-bit single precision floating point, some
 residual graphical errors (so called 'surface acne') may appear. One can adjust
 the error margin value, *ERR_MARGIN*, within the code, which may improve the
