@@ -3,8 +3,13 @@ By James A Ross
 
 ![C-Ray rendering on Parallella Epiphany-III cores](foo.png)
  
-## Original code
+## Original Code
 http://www.futuretech.blinkenlights.nl/c-ray.html
+
+## Prerequisites
+
+* [COPRTHR-2 SDK](http://www.browndeertechnology.com/coprthr2.htm) for host and coprocessor code
+* [SDL 2.0](https://www.libsdl.org/download-2.0.php) (optional) for SDL real-time rendering view
 
 ## Usage
 ```
@@ -37,11 +42,16 @@ Scene file format:
 ```
 
 ## Benchmarks
-Command                                               | Execution Time (ms)
-------------------------------------------------------|-----------------
-./c-ray-mt -t 16 -s 800x600 -r 1  -o foo.ppm -i scene | 318
-./c-ray-mt -t 1  -s 800x600 -r 1  -o foo.ppm -i scene | 5069
-./c-ray-mt -t 16 -s 800x600 -r 16 -o foo.ppm -i scene | 4988 
+| Command                                                            | Execution Time (ms) |
+|:------------------------------------------------------------------:|:-------------------:|
+| <code>./c-ray-mt -t 16 -s 800x600 -r 1  -o foo.ppm -i scene</code> |                 318 |
+| <code>./c-ray-mt -t 1  -s 800x600 -r 1  -o foo.ppm -i scene</code> |                5069 |
+| <code>./c-ray-mt -t 16 -s 800x600 -r 16 -o foo.ppm -i scene</code> |                4988 |
+
+By comparison, the [original C-Ray
+1.1](http://www.futuretech.blinkenlights.nl/c-ray.html) code executed the first
+benchmark on the dual ARM Cortex-A9 cores (with four threads) in 1360 ms, 4.3x
+slower.
 
 ## Major Modifications from Original C-Ray 1.1
 As Epiphany-III is a coprocessor some modifications had to be made:
@@ -72,13 +82,13 @@ is to use a mutex to fetch and increment a counter located within one of the
 cores.  The relatively minor overhead of this operation keeps all cores busy
 for the duration of the computation.
 
-### <a name="support_code"></a>Miscellaneous Supporting Code
+### <a name="supporting_code"></a>Miscellaneous Supporting Code
 Several supporting math routines are used rather than the defaults from the
-compiler.  The routines, *_rsqrt*, *_sqrt*, and *_inv* calculate the inverse
+compiler.  The routines, `_rsqrt`, `_sqrt`, and `_inv` calculate the inverse
 square root, square root, and inverse, respectively. They presently use four
 newton iterations for higher precision. There are three other supporting math
-routines written by SUN: *__powf*, *__copysignf*, and *__scalbnf* that are
-included within the code.
+routines written by SUN: `__powf`, `__copysignf`, and `__scalbnf` that are
+included within the code. These routines are likely targets for optimization.
 
 ### <a name="image_output"></a>Image Output
 A real-time viewer has been added with the SDL2 interface to visualizing the
@@ -96,5 +106,5 @@ USESDL=1 make
 ## Known Issues
 Likely due to the conversion to 32-bit single precision floating point, some
 residual graphical errors (so called 'surface acne') may appear. One can adjust
-the error margin value, *ERR_MARGIN*, within the code, which may improve the
+the error margin value, `ERR_MARGIN`, within the code, which may improve the
 result.
